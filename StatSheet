@@ -1,1 +1,197 @@
-Text lol
+/*
+ * How to calculate evasion
+ * Evade the hit all together :
+ * +More complex with calculations
+ * +Allows for build variation
+ * -Harder to implement in an MMC class
+ * -Difficult to put into an ASC but easier to build my own system for
+ * +/- Have to add Accuracy stat to make dodge more manageable in pvp
+ * 
+ * -Balance is difficult
+ */
+
+
+/*
+ * Types of Gear :
+ * Evasion          - % to dodge hit
+ * Defense          - Damage Reduction %
+ * EnergyShield     - Shield /Essentailly health
+ * 
+ * Hybrid Gear Types : Store 40-70% less value of normal gear but have double stats
+ * Def/Eva 
+ * Def/ES
+ * Eva/ES
+ * 
+ *
+ * calculation ->
+ * 
+ * bool evasion (evasion, Accuracy) :
+ *  { See if hit landed first }
+ * 
+ * float Resistance Calculation (WasDodged, Resistance, ResistancePen, DamageAfterReduction) :
+ * { 
+ *  (1 - resistance) * Dmg
+ *  return damage after resistance
+ * }
+ * 
+ * float defense (Incoming Damage, defense):
+ * {
+ *      Calculate Reduction from damage and return;
+ * }
+ * float EnergyShield (incoming Damage, EnergyShield) :
+ * {
+ *      Subtract damage and return a value for health handle
+ * }
+ * float Health (IncomingDamage, Health) :
+ * {
+ *      Check if (Damage num != 0)
+ *      {
+ *          subtract damage num from health
+ *      }
+ *      return health value
+ * }
+ *  
+ * 
+ * All are attributes apart of the character
+ * ES will recharge after 2 seconds but X% can change the value
+ * 
+ * ---------------------------------------------------------------
+ * 
+ * Too many stats are bad - Change stats to be more Fixed with less pointless stats or don't display to player
+ * 
+ * 
+ * Complete StatsSheet for Player
+ * 
+ *  Primary Attributes -> Players Ability to live
+ *  Health          -Current Health of player
+ *  MaxHealth       -Max health of player
+ *  Mana            -Current Mana of player
+ *  MaxMana         -Max mana of player
+ *  ES              -Current EnergyShield of the player
+ *  Max ES          -Max EnergyShield of the player
+ * 
+ *  General Attributes -> Affects player in a general sense / Not affecting just one stat
+ *  Dexterity       -Scales evasion and accuracy
+ *  Strength        -Scales Physical Weapon Damage, Health and Armor
+ *  Intelligence    -Scales Elemental Damage, EnergyShield, and Mana
+ *  
+ *  Stat Attributes - Basic Stats Typically Affecting only One mechanic or needed
+ *  Defense         -% of Damage reduction
+ *  Evasion         -% of chance to dodge hit
+ *  Accuracy        -% Chance to hit a target
+ *  Crit Chance     -% Chance to deal a critical hit
+ *  Crit Multi      -% Multiplier of a critical hit / 2x is 200% , 3x is 300% Damage
+ * 
+ *  Meta Attributes - These are Stats Based off Other Objects/Stat Sheets - Allows for DPS Calculations
+ *  Phys Dam        -Flat Damage Number gotten from Weapon
+ *  Ele Dam         -Flat Elemental Dam gotten from Weapon
+ *  Dam             -Avg Damage of Both Stats Added
+ *  PhysDamTaken    -Flat Physical Damage Taken
+ *  EleDamTaken     -Flat Elemental Damage Taken
+ *  DamTaken        -Flat Damage Taken Added From both Stats
+ * 
+ *  Resistances - Reduction of Specific Damage Types
+ *  Fire Resistance     - Resistance % of fire          //
+ *  Cold Resistance     - Resistance % of cold          //
+ *  Light Resistance    - Resistance % of the light     //
+ *  Void Resistance     - Resistance % of the void      // 
+ *  Chaos Resistance    - Resistance % of the Chaos     // Gonna change to different name
+ -------------------------------------------------------------------------------------------------------------------------
+ *  Stat Clamp Values
+ *  Resistance          : Min:  0% - Max: 75%           //easiest Stat to get
+ *  Damage Reduction    : Min:  0% - Max: 85%           //Based off armor, Primarly  mitigates physical, only 10% of value used in damage reduction against Elemental Damage
+ *  Dodge Chance        : Min:  0% - Max: 95%           //Chance to dodge a shot, can do any type of damage
+ *  Chance to hit       : Base: 5% - Clamp at 100%      //Accuracy based
+ *  Crit Chance         : Min:  5% - Max: 100%          //Crit Chance based off just % stats on gear and passive tree
+ *  Crit multi          : Base: 200% (2x Dam)           //Crit Multi based off just % stats on gear and passive tree
+ *
+ *  Lucky Hit Chance - Fun to put into a game but would require a lot of processing
+ *  bBoolIsLucky = false; - Changed from a passive tree point. // Might not do, another dumb thing to think about
+ */
+
+/*  
+ *
+ *
+ * //Gear slots and affixes
+ *
+ *
+ *
+ * -Mostly Defensive Stats/Result in survivability
+ * Helm   ->can Role %HealthRegen/With higher Health Values
+ * Chest  ->Can Role Higher Health/EnergyShield Values
+ * Gloves ->Can role cooldown/cast speed/Add to attacks at higher value
+ * Boots  ->Can role movement speed and %HealthRegen
+ *
+ * -Directly Results in skill and weapon damage doesn't role many defensive Stats
+ * Relic ->Improves Class Ability (% less Cooldown, % Cast Speed, % Spell Damage)
+ *
+ * -Mostly Offensive / Only defensive roles +Health, +Mana, or +ES
+ * 2xRing -> + Damage to attacks and % of type damage
+ * 
+ * -Can role Defensive stats with % Increases. Can Also Roles %Attack Increases
+ * Amulet -> %Damage and % Health, ES, Mana, Evasion, Armor, Resistance (Including res to all elements)
+ *
+ * Levels
+ * 1->50
+ * 
+ *
+ * What about Target Farm system like COF - Action House System with randomly generated gear in it (Allow for singleplayer play)
+ * 
+ *
+ */
+
+
+/*
+ *
+ *  // Classes and Skills
+ *  Classes ->
+ *  1. Zelot        -> {The Spell Caster/Elemental Class}
+ *  Subclasses
+ * 
+ *  ArchMage        -Elemental Focused Damage
+ *  LightBringer    -Light Focused Class / More Resistant to void
+ *  OathBreaker     -Void/Chaos Damage class / Takes more damage to light
+ *  
+ *                                
+ *  2. Guardian     -> {This is the Big tank class}
+ *  Subclasses
+ *  
+ *  Warrior         -Uses Physical Attacks to inflict Massive Damage to people
+ *  Paladin         -Use light to purge foes
+ *  Berserker       -Heavy Attacks/melee skills inflict Bleed damage on People
+ *  
+ *                                
+ *  3. Trickster    -> {The quick, fast attack class}
+ *  Subclasses
+ *  
+ *  Hunter          -Fast moving class, can dodge attacks easier but gets hit harder
+ *  Shadow          -Uses the Void to hide and attack foes
+ *  DeadEye         -Uses Attacks of any type to deal damage and inflict status on enemies
+ *
+ *  Skill trees -> Mix of Destiny/Outriders/POE - Might use CSV for layout
+ *  
+ *  -Generalized Skill tree for all classes / PufferfishMod like skill tree Travel nodes and Major nodes (POE LIKE WITH MASTERIES)                    
+ *  
+ *  Open Menu -> Zoom In/Out and freedom to choose
+ *  
+ *  -Class trees / Smaller PufferfishMod Skill trees Maybe 16 points : 4 Minor -> Result in choices, 8 major
+ *
+ *  Minor -> 2 Major -> Minor -> 2 Major -> Minor -> 2 Major -> Minor -> 2 Major
+ *
+ */
+
+ Custom GAS(Gameplay Ability System) in Unity
+ {
+    TAGS - NEEDED 
+    {
+        Tag splitting system not hard just check till a Period (.)
+        After that i can split the string into sections
+        to correctly check the system
+
+        Might make a custom data container
+    }
+    
+    struct with parent string, child string and a list
+    bools for isParentString = false;
+    This is
+ }

@@ -180,18 +180,3 @@
  *
  */
 
- Custom GAS(Gameplay Ability System) in Unity
- {
-    TAGS - NEEDED 
-    {
-        Tag splitting system not hard just check till a Period (.)
-        After that i can split the string into sections
-        to correctly check the system
-
-        Might make a custom data container
-    }
-    
-    struct with parent string, child string and a list
-    bools for isParentString = false;
-    This is
- }

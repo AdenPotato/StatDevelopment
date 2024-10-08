@@ -23,7 +23,7 @@
  * Eva/ES
  * 
  *
- * calculation ->
+ * calculation (Single function for calculations)->
  * 
  * bool evasion (evasion, Accuracy) :
  *  { See if hit landed first }
@@ -33,7 +33,6 @@
  *  (1 - resistance) * Dmg
  *  return damage after resistance
  * }
- * 
  * float defense (Incoming Damage, defense):
  * {
  *      Calculate Reduction from damage and return;
@@ -179,4 +178,3 @@
  *  Minor -> 2 Major -> Minor -> 2 Major -> Minor -> 2 Major -> Minor -> 2 Major
  *
  */
-

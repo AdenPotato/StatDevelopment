@@ -61,7 +61,7 @@
  * 
  * Complete StatsSheet for Player
  * 
- *  Primary Attributes -> Players Ability to live
+ *  Vital Stats -> Players Ability to live
  *  Health          -Current Health of player
  *  MaxHealth       -Max health of player
  *  Mana            -Current Mana of player
@@ -69,19 +69,19 @@
  *  ES              -Current EnergyShield of the player
  *  Max ES          -Max EnergyShield of the player
  * 
- *  General Attributes -> Affects player in a general sense / Not affecting just one stat
+ *  General Stats -> Affects player in a general sense / Not affecting just one stat
  *  Dexterity       -Scales evasion and accuracy
  *  Strength        -Scales Physical Weapon Damage, Health and Armor
  *  Intelligence    -Scales Elemental Damage, EnergyShield, and Mana
  *  
- *  Stat Attributes - Basic Stats Typically Affecting only One mechanic or needed
+ *  Stat Defense - Basic Stats Typically Affecting only One mechanic or needed
  *  Defense         -% of Damage reduction
  *  Evasion         -% of chance to dodge hit
  *  Accuracy        -% Chance to hit a target
  *  Crit Chance     -% Chance to deal a critical hit
  *  Crit Multi      -% Multiplier of a critical hit / 2x is 200% , 3x is 300% Damage
  * 
- *  Meta Attributes - These are Stats Based off Other Objects/Stat Sheets - Allows for DPS Calculations
+ *  Meta Stats - These are Stats Based off Other Objects/Stat Sheets - Allows for DPS Calculations
  *  Phys Dam        -Flat Damage Number gotten from Weapon
  *  Ele Dam         -Flat Elemental Dam gotten from Weapon
  *  Dam             -Avg Damage of Both Stats Added
@@ -113,7 +113,7 @@
  *
  * //Gear slots and affixes
  *
- *
+ * 2 weapons
  *
  * -Mostly Defensive Stats/Result in survivability
  * Helm   ->can Role %HealthRegen/With higher Health Values
@@ -121,8 +121,6 @@
  * Gloves ->Can role cooldown/cast speed/Add to attacks at higher value
  * Boots  ->Can role movement speed and %HealthRegen
  *
- * -Directly Results in skill and weapon damage doesn't role many defensive Stats
- * Relic ->Improves Class Ability (% less Cooldown, % Cast Speed, % Spell Damage)
  *
  * -Mostly Offensive / Only defensive roles +Health, +Mana, or +ES
  * 2xRing -> + Damage to attacks and % of type damage
@@ -178,3 +176,34 @@
  *  Minor -> 2 Major -> Minor -> 2 Major -> Minor -> 2 Major -> Minor -> 2 Major
  *
  */
+
+
+General Item Types:
+None
+
+
+
+Weapon
+Armor
+Accessory
+Consumable
+Currency
+Socket
+Item.Type.*
+
+Behavior of item:
+None
+Equipable
+SingleUse
+MultiUse
+Socket
+Stackable
+Item.Behavior.*
+
+Rarity:
+None
+Common
+Rare
+Epic
+Legendary
+Item.Rarity.*
